@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ Simulador de Contracheque - Servidor Público</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            margin: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .form-section h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .calculated-value {
+            background: #e8f5e8;
+            padding: 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #27ae60;
+            border: 1px solid #27ae60;
+        }
+
+        .buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+        }
+
+        .result-section {
+            margin: 25px;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            border-radius: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .result-text {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Simulador de Contracheque - Servidor Público</h1>
+            <p>Versão Mobile-Friendly</p>
+        </div>
+
+        <div class="form-section">
+            <h3>📋 Dados do Servidor</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">Nome:</label>
+                    <input type="text" id="name" value="João Silva">
+                </div>
+                <div class="form-group">
+                    <label for="position">Cargo:</label>
+                    <input type="text" id="position" value="Guarda Municipal">
+                </div>
+                <div class="form-group">
+                    <label for="registration">Matrícula:</label>
+                    <input type="text" id="registration" value="123456">
+                </div>
+                <div class="form-group">
+                    <label for="dependents">Dependentes IR:</label>
+                    <input type="number" id="dependents" value="0" min="0" max="10">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>💰 Vencimentos Base</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="baseSalary">Salário Base (R$):</label>
+                    <input type="number" id="baseSalary" value="3500.00" step="0.01" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Risco de Vida (30%):</label>
+                    <div class="calculated-value" id="riskLifeValue">R$ 1050.00</div>
+                </div>
+                <div class="form-group">
+                    <label for="overtime">Horas Extras (R$):</label>
+                    <input type="number" id="overtime" value="0.00" step="0.01">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>🎖️ Gratificações</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="gts">GTS - Tempo de Serviço (%):</label>
+                    <input type="number" id="gts" value="0" min="0" max="100" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor GTS:</label>
+                    <div class="calculated-value" id="gtsValue">R$ 0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>🛡️ Gratificação de Guarda</h3>
+            <div class="radio-group">
+                <div class="radio-item">
+                    <input type="radio" id="guardNone" name="guardLevel" value="Nenhum" checked onchange="updateCalculations()">
+                    <label for="guardNone">Nenhum</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardI" name="guardLevel" value="I" onchange="updateCalculations()">
+                    <label for="guardI">Nível I (5%)</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardII" name="guardLevel" value="II" onchange="updateCalculations()">
+                    <label for="guardII">Nível II (10.25%)</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardIII" name="guardLevel" value="III" onchange="updateCalculations()">
+                    <label for="guardIII">Nível III (15.76%)</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardIV" name="guardLevel" value="IV" onchange="updateCalculations()">
+                    <label for="guardIV">Nível IV (21.55%)</label>
+                </div>
+            </div>
+            <div class="calculated-value" id="guardValue" style="margin-top: 10px;">Gratificação: R$ 0.00</div>
+        </div>
+
+        <div class="form-section">
+            <h3>➕ Adicionais</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="baladaQty">Balada Segura (Qtd):</label>
+                    <input type="number" id="baladaQty" value="0" min="0" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor Balada Segura:</label>
+                    <div class="calculated-value" id="baladaValue">R$ 0.00</div>
+                </div>
+                <div class="form-group">
+                    <label for="mealAllowance">Vale Alimentação (R$):</label>
+                    <input type="number" id="mealAllowance" value="500.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="transportAllowance">Vale Transporte (R$):</label>
+                    <input type="number" id="transportAllowance" value="200.00" step="0.01">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>📉 Descontos</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="funsemaAuto" checked> FUNSEMA (14% - Automático)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="irpfAuto" checked> IRPF (Automático)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="healthPlan">Plano de Saúde (R$):</label>
+                    <input type="number" id="healthPlan" value="150.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="transportDiscount">Vale Transporte (Desconto):</label>
+                    <input type="number" id="transportDiscount" value="0.00" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="otherDeductions">Outros Descontos (R$):</label>
+                    <input type="number" id="otherDeductions" value="0.00" step="0.01">
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn" onclick="calculatePayroll()">🧮 Calcular Contracheque</button>
+            <button class="btn secondary" onclick="clearForm()">🗑️ Limpar</button>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <h3>📊 Resultado do Contracheque</h3>
+            <div class="result-text" id="resultText"></div>
+        </div>
+    </div>
+
+    <script>
+        function updateCalculations() {
+            const baseSalary = parseFloat(document.getElementById('baseSalary').value) || 0;
+            
+            // Risco de vida (30%)
+            const riskLife = baseSalary * 0.30;
+            document.getElementById('riskLifeValue').textContent = `R$ ${riskLife.toFixed(2)}`;
+            
+            // GTS
+            const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
+            const gtsValue = baseSalary * (gtsPercent / 100);
+            document.getElementById('gtsValue').textContent = `R$ ${gtsValue.toFixed(2)}`;
+            
+            // Gratificação de Guarda
+            const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
+            const guardPercentages = {"Nenhum": 0, "I": 5, "II": 10.25, "III": 15.76, "IV": 21.55};
+            const guardPercent = guardPercentages[guardLevel] || 0;
+            const guardValue = baseSalary * (guardPercent / 100);
+            document.getElementById('guardValue').textContent = `Gratificação: R$ ${guardValue.toFixed(2)} (${guardPercent}%)`;
+            
+            // Balada Segura
+            const baladaQty = parseInt(document.getElementById('baladaQty').value) || 0;
+            const baladaValue = baladaQty * 300.00;
+            document.getElementById('baladaValue').textContent = `R$ ${baladaValue.toFixed(2)}`;
+        }
+
+        function calculateFunsema(salary) {
+            return salary * 0.14;
+        }
+
+        function calculateIRPF(baseCalculation) {
+            if (baseCalculation <= 2259.20) {
+                return 0;
+            } else if (baseCalculation >= 2259.21 && baseCalculation <= 2826.65) {
+                return baseCalculation * 0.075 - 170.00;
+            } else if (baseCalculation >= 2826.66 && baseCalculation <= 3751.05) {
+                return baseCalculation * 0.15 - 381.44;
+            } else if (baseCalculation >= 3751.06 && baseCalculation <= 4663.99) {
+                return baseCalculation * 0.225 - 663.00;
+            } else {
+                return baseCalculation * 0.275 - 896.00;
+            }
+        }
+
+        function calculatePayroll() {
+            try {
+                // Obter valores
+                const baseSalary = parseFloat(document.getElementById('baseSalary').value) || 0;
+                const overtime = parseFloat(document.getElementById('overtime').value) || 0;
+                const mealAllowance = parseFloat(document.getElementById('mealAllowance').value) || 0;
+                const transportAllowance = parseFloat(document.getElementById('transportAllowance').value) || 0;
+                const healthPlan = parseFloat(document.getElementById('healthPlan').value) || 0;
+                const transportDiscount = parseFloat(document.getElementById('transportDiscount').value) || 0;
+                const otherDeductions = parseFloat(document.getElementById('otherDeductions').value) || 0;
+                const dependents = parseInt(document.getElementById('dependents').value) || 0;
+
+                // Calcular valores automáticos
+                const riskLife = baseSalary * 0.30;
+                const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
+                const gtsValue = baseSalary * (gtsPercent / 100);
+                
+                const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
+                const guardPercentages = {"Nenhum": 0, "I": 5, "II": 10.25, "III": 15.76, "IV": 21.55};
+                const guardPercent = guardPercentages[guardLevel] || 0;
+                const guardValue = baseSalary * (guardPercent / 100);
+                
+                const baladaQty = parseInt(document.getElementById('baladaQty').value) || 0;
+                const baladaValue = baladaQty * 300.00;
+
+                // Calcular bases
+                const funsemaBase = baseSalary + riskLife + gtsValue + guardValue;
+                const totalEarnings = baseSalary + riskLife + gtsValue + guardValue + overtime + baladaValue;
+                const totalBenefits = mealAllowance + transportAllowance;
+
+                // Calcular descontos
+                const funsema = document.getElementById('funsemaAuto').checked ? calculateFunsema(funsemaBase) : 0;
+                const irCalculationBase = baseSalary + riskLife + gtsValue + guardValue + overtime + baladaValue - funsema;
+                let irpf = document.getElementById('irpfAuto').checked ? calculateIRPF(irCalculationBase) : 0;
+                if (irpf < 0) irpf = 0;
+
+                const totalDeductions = funsema + irpf + healthPlan + transportDiscount + otherDeductions;
+                const netSalary = totalEarnings + totalBenefits - totalDeductions;
+
+                // Gerar contracheque
+                generatePayslip({
+                    name: document.getElementById('name').value,
+                    position: document.getElementById('position').value,
+                    registration: document.getElementById('registration').value,
+                    dependents,
+                    baseSalary,
+                    riskLife,
+                    overtime,
+                    gtsValue,
+                    gtsPercent,
+                    guardValue,
+                    guardPercent,
+                    guardLevel,
+                    baladaValue,
+                    baladaQty,
+                    mealAllowance,
+                    transportAllowance,
+                    funsemaBase,
+                    irCalculationBase,
+                    totalEarnings,
+                    totalBenefits,
+                    funsema,
+                    irpf,
+                    healthPlan,
+                    transportDiscount,
+                    otherDeductions,
+                    totalDeductions,
+                    netSalary
+                });
+
+            } catch (error) {
+                alert('Erro no cálculo. Verifique os valores inseridos.');
+            }
+        }
+
+        function generatePayslip(data) {
+            const currentDate = new Date().toLocaleDateString('pt-BR');
+            
+            const payslip = `
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                         CONTRACHEQUE - SERVIDOR PÚBLICO                  ║
+║                              ${currentDate}                            ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ SERVIDOR: ${data.name.padEnd(58)} ║
+║ CARGO: ${data.position.padEnd(61)} ║
+║ MATRÍCULA: ${data.registration.padEnd(58)} ║
+║ DEPENDENTES IR: ${data.dependents.toString().padEnd(56)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                            VENCIMENTOS TRIBUTÁVEIS                       ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ Salário Base                                       R$ ${data.baseSalary.toFixed(2).padStart(12)} ║
+║ GTS - Tempo de Serviço (${data.gtsPercent.toFixed(0).padStart(3)}%)                    R$ ${data.gtsValue.toFixed(2).padStart(12)} ║
+║ Horas Extras                                       R$ ${data.overtime.toFixed(2).padStart(12)} ║
+║ Balada Segura (${data.baladaQty.toString().padStart(2)} x R$ 300,00)                  R$ ${data.baladaValue.toFixed(2).padStart(12)} ║
+║ Gratificação de Guarda Nível ${data.guardLevel} (${data.guardPercent.toFixed(2).padStart(5)}%)         R$ ${data.guardValue.toFixed(2).padStart(12)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ SUBTOTAL PARA CÁLCULO IR                           R$ ${data.irCalculationBase.toFixed(2).padStart(12)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ TOTAL VENCIMENTOS                                  R$ ${data.totalEarnings.toFixed(2).padStart(12)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                BENEFÍCIOS                                 ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ Vale Alimentação                                   R$ ${data.mealAllowance.toFixed(2).padStart(12)} ║
+║ Vale Transporte                                    R$ ${data.transportAllowance.toFixed(2).padStart(12)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ TOTAL BENEFÍCIOS                                   R$ ${data.totalBenefits.toFixed(2).padStart(12)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                               DESCONTOS                                   ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ FUNSEMA (14%) - Base: R$ ${data.funsemaBase.toFixed(2).padStart(8)}                 R$ ${data.funsema.toFixed(2).padStart(12)} ║
+║ IRPF - Base Cálculo: R$ ${data.irCalculationBase.toFixed(2).padStart(8)}                   R$ ${data.irpf.toFixed(2).padStart(12)} ║
+║ Plano de Saúde                                     R$ ${data.healthPlan.toFixed(2).padStart(12)} ║
+║ Vale Transporte (Desconto)                         R$ ${data.transportDiscount.toFixed(2).padStart(12)} ║
+║ Outros Descontos                                   R$ ${data.otherDeductions.toFixed(2).padStart(12)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║ TOTAL DESCONTOS                                    R$ ${data.totalDeductions.toFixed(2).padStart(12)} ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                          VALOR LÍQUIDO A RECEBER                         ║
+╠═══════════════════════════════════════════════════════════════════════════╣
+║                                                    R$ ${data.netSalary.toFixed(2).padStart(12)} ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+RESUMO DETALHADO:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+COMPOSIÇÃO DOS VENCIMENTOS:
+• Salário Base: R$ ${data.baseSalary.toFixed(2)}
+• Risco de Vida (30% do sal. base): R$ ${data.riskLife.toFixed(2)} [TRIBUTÁVEL P/ FUNSEMA]
+• GTS (${data.gtsPercent.toFixed(0)}% do sal. base): R$ ${data.gtsValue.toFixed(2)}
+• Gratificação Guarda Nível ${data.guardLevel} (${data.guardPercent.toFixed(2)}% do sal. base): R$ ${data.guardValue.toFixed(2)}
+• Horas Extras: R$ ${data.overtime.toFixed(2)}
+• Balada Segura (${data.baladaQty} unidades): R$ ${data.baladaValue.toFixed(2)}
+
+TOTAIS:
+• Base FUNSEMA (Sal+Risco+GTS+Grat.Guarda): R$ ${data.funsemaBase.toFixed(2)}
+• Base IRPF (Todos Venc. - FUNSEMA): R$ ${data.irCalculationBase.toFixed(2)}
+• Total Vencimentos: R$ ${data.totalEarnings.toFixed(2)}
+• Total Benefícios: R$ ${data.totalBenefits.toFixed(2)}
+• Total Descontos: R$ ${data.totalDeductions.toFixed(2)}
+• Valor Líquido: R$ ${data.netSalary.toFixed(2)}
+
+INFORMAÇÕES IMPORTANTES:
+• FUNSEMA: 14% sobre (Salário Base + Risco de Vida + GTS + Grat. Guarda)
+• IRPF: Regra específica sem dedução por dependentes
+• Risco de Vida é TRIBUTÁVEL para ambos FUNSEMA e IRPF
+• Gratificação de Guarda: Níveis com percentuais compostos
+
+Gerado em: ${new Date().toLocaleString('pt-BR')}
+`;
+
+            document.getElementById('resultText').textContent = payslip;
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearForm() {
+            document.getElementById('name').value = '';
+            document.getElementById('position').value = '';
+            document.getElementById('registration').value = '';
+            document.getElementById('dependents').value = '0';
+            document.getElementById('baseSalary').value = '0.00';
+            document.getElementById('overtime').value = '0.00';
+            document.getElementById('gts').value = '0';
+            document.querySelector('input[value="Nenhum"]').checked = true;
+            document.getElementById('baladaQty').value = '0';
+            document.getElementById('mealAllowance').value = '0.00';
+            document.getElementById('transportAllowance').value = '0.00';
+            document.getElementById('healthPlan').value = '0.00';
+            document.getElementById('transportDiscount').value = '0.00';
+            document.getElementById('otherDeductions').value = '0.00';
+            document.getElementById('resultSection').style.display = 'none';
+            updateCalculations();
+        }
+
+        // Inicializar cálculos
+        updateCalculations();
+    </script>
+</body>
+</html>

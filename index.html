@@ -133,22 +133,249 @@
             background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
         }
 
+        /* NOVA SEÇÃO DE RESULTADO MODERNIZADA */
         .result-section {
             margin: 25px;
-            padding: 20px;
-            background: #2c3e50;
-            color: white;
-            border-radius: 10px;
-            max-height: 600px;
-            overflow-y: auto;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #dee2e6;
         }
 
-        .result-text {
-            font-family: 'Courier New', monospace;
+        .result-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .result-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #e74c3c, #f39c12, #2ecc71);
+        }
+
+        .result-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .result-date {
             font-size: 0.9rem;
-            line-height: 1.4;
-            white-space: pre-wrap;
-            word-break: break-all;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .payslip-container {
+            padding: 25px;
+            background: white;
+        }
+
+        .employee-info {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #2c3e50;
+            min-width: 100px;
+        }
+
+        .info-value {
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .payslip-section {
+            margin-bottom: 25px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            text-align: center;
+        }
+
+        .earnings-header {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+
+        .benefits-header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .deductions-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .summary-header {
+            background: linear-gradient(135deg, #8e44ad 0%, #7d3c98 100%);
+        }
+
+        .section-content {
+            padding: 0;
+        }
+
+        .payslip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f8f9fa;
+            transition: background-color 0.2s;
+        }
+
+        .payslip-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .payslip-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-label {
+            font-weight: 500;
+            color: #495057;
+            flex: 1;
+        }
+
+        .item-detail {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-right: 15px;
+        }
+
+        .item-value {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .total-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-top: 2px solid #dee2e6;
+        }
+
+        .total-item .item-value {
+            color: #2c3e50;
+            font-size: 1.2rem;
+        }
+
+        .net-salary {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 2px solid #28a745;
+        }
+
+        .net-salary-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .net-salary-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #155724;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .calculation-details {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .calculation-details h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #17a2b8;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-top: 3px;
+        }
+
+        .print-button {
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(23, 162, 184, 0.4);
         }
 
         @media (max-width: 768px) {
@@ -169,14 +396,36 @@
             .header h1 {
                 font-size: 1.4rem;
             }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payslip-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .item-value {
+                align-self: flex-end;
+            }
+
+            .net-salary-value {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏛️ Simulador de Contracheque - Servidor Público</h1>
-            <p>Versão Mobile-Friendly</p>
+            <h1>🏛️ Simulador do Guarda - Servidor Público</h1>
+            <p>Devops. Abranti</p>
         </div>
 
         <div class="form-section">
@@ -184,7 +433,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="name">Nome:</label>
-                    <input type="text" id="name" value="João Silva">
+                    <input type="text" id="name" value="">
                 </div>
                 <div class="form-group">
                     <label for="position">Cargo:</label>
@@ -192,7 +441,7 @@
                 </div>
                 <div class="form-group">
                     <label for="registration">Matrícula:</label>
-                    <input type="text" id="registration" value="123456">
+                    <input type="text" id="registration" value="">
                 </div>
                 <div class="form-group">
                     <label for="dependents">Dependentes IR:</label>
@@ -206,7 +455,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="baseSalary">Salário Base (R$):</label>
-                    <input type="number" id="baseSalary" value="3500.00" step="0.01" oninput="updateCalculations()">
+                    <input type="number" id="baseSalary" value="4038.00" step="0.01" oninput="updateCalculations()">
                 </div>
                 <div class="form-group">
                     <label>Risco de Vida (30%):</label>
@@ -241,20 +490,20 @@
                     <label for="guardNone">Nenhum</label>
                 </div>
                 <div class="radio-item">
-                    <input type="radio" id="guardI" name="guardLevel" value="I" onchange="updateCalculations()">
-                    <label for="guardI">Nível I (5%)</label>
-                </div>
-                <div class="radio-item">
                     <input type="radio" id="guardII" name="guardLevel" value="II" onchange="updateCalculations()">
-                    <label for="guardII">Nível II (10.25%)</label>
+                    <label for="guardII">Nível II (5%)</label>
                 </div>
                 <div class="radio-item">
                     <input type="radio" id="guardIII" name="guardLevel" value="III" onchange="updateCalculations()">
-                    <label for="guardIII">Nível III (15.76%)</label>
+                    <label for="guardII">Nível III (10.25%)</label>
                 </div>
                 <div class="radio-item">
                     <input type="radio" id="guardIV" name="guardLevel" value="IV" onchange="updateCalculations()">
-                    <label for="guardIV">Nível IV (21.55%)</label>
+                    <label for="guardIII">Nível IV (15.76%)</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardV" name="guardLevel" value="V" onchange="updateCalculations()">
+                    <label for="guardIV">Nível V (21.55%)</label>
                 </div>
             </div>
             <div class="calculated-value" id="guardValue" style="margin-top: 10px;">Gratificação: R$ 0.00</div>
@@ -273,11 +522,11 @@
                 </div>
                 <div class="form-group">
                     <label for="mealAllowance">Vale Alimentação (R$):</label>
-                    <input type="number" id="mealAllowance" value="500.00" step="0.01">
+                    <input type="number" id="mealAllowance" value="650.00" step="0.01">
                 </div>
                 <div class="form-group">
                     <label for="transportAllowance">Vale Transporte (R$):</label>
-                    <input type="number" id="transportAllowance" value="200.00" step="0.01">
+                    <input type="number" id="transportAllowance" value="" step="6.00">
                 </div>
             </div>
         </div>
@@ -297,15 +546,15 @@
                 </div>
                 <div class="form-group">
                     <label for="healthPlan">Plano de Saúde (R$):</label>
-                    <input type="number" id="healthPlan" value="150.00" step="0.01">
+                    <input type="number" id="healthPlan" value="0" step="0.01">
                 </div>
                 <div class="form-group">
                     <label for="transportDiscount">Vale Transporte (Desconto):</label>
-                    <input type="number" id="transportDiscount" value="0.00" step="0.01">
+                    <input type="number" id="transportDiscount" value="0.00" step="3.00">
                 </div>
                 <div class="form-group">
                     <label for="otherDeductions">Outros Descontos (R$):</label>
-                    <input type="number" id="otherDeductions" value="0.00" step="0.01">
+                    <input type="number" id="otherDeductions" value="0.00" step="40.00">
                 </div>
             </div>
         </div>
@@ -316,8 +565,14 @@
         </div>
 
         <div class="result-section" id="resultSection" style="display: none;">
-            <h3>📊 Resultado do Contracheque</h3>
-            <div class="result-text" id="resultText"></div>
+            <div class="result-header">
+                <h3>📊 Contracheque - Servidor Público</h3>
+                <div class="result-date" id="resultDate"></div>
+            </div>
+            <div class="payslip-container" id="payslipContainer">
+                <!-- Conteúdo será inserido dinamicamente -->
+            </div>
+            <button class="print-button" onclick="window.print()">🖨️ Imprimir Contracheque</button>
         </div>
     </div>
 
@@ -404,8 +659,8 @@
                 const totalDeductions = funsema + irpf + healthPlan + transportDiscount + otherDeductions;
                 const netSalary = totalEarnings + totalBenefits - totalDeductions;
 
-                // Gerar contracheque
-                generatePayslip({
+                // Gerar contracheque moderno
+                generateModernPayslip({
                     name: document.getElementById('name').value,
                     position: document.getElementById('position').value,
                     registration: document.getElementById('registration').value,
@@ -440,82 +695,155 @@
             }
         }
 
-        function generatePayslip(data) {
+        function generateModernPayslip(data) {
             const currentDate = new Date().toLocaleDateString('pt-BR');
+            document.getElementById('resultDate').textContent = currentDate;
             
-            const payslip = `
-╔═══════════════════════════════════════════════════════════════════════════╗
-║                         CONTRACHEQUE - SERVIDOR PÚBLICO                  ║
-║                              ${currentDate}                            ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ SERVIDOR: ${data.name.padEnd(58)} ║
-║ CARGO: ${data.position.padEnd(61)} ║
-║ MATRÍCULA: ${data.registration.padEnd(58)} ║
-║ DEPENDENTES IR: ${data.dependents.toString().padEnd(56)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║                            VENCIMENTOS TRIBUTÁVEIS                       ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ Salário Base                                       R$ ${data.baseSalary.toFixed(2).padStart(12)} ║
-║ GTS - Tempo de Serviço (${data.gtsPercent.toFixed(0).padStart(3)}%)                    R$ ${data.gtsValue.toFixed(2).padStart(12)} ║
-║ Horas Extras                                       R$ ${data.overtime.toFixed(2).padStart(12)} ║
-║ Balada Segura (${data.baladaQty.toString().padStart(2)} x R$ 300,00)                  R$ ${data.baladaValue.toFixed(2).padStart(12)} ║
-║ Gratificação de Guarda Nível ${data.guardLevel} (${data.guardPercent.toFixed(2).padStart(5)}%)         R$ ${data.guardValue.toFixed(2).padStart(12)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ SUBTOTAL PARA CÁLCULO IR                           R$ ${data.irCalculationBase.toFixed(2).padStart(12)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ TOTAL VENCIMENTOS                                  R$ ${data.totalEarnings.toFixed(2).padStart(12)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║                                BENEFÍCIOS                                 ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ Vale Alimentação                                   R$ ${data.mealAllowance.toFixed(2).padStart(12)} ║
-║ Vale Transporte                                    R$ ${data.transportAllowance.toFixed(2).padStart(12)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ TOTAL BENEFÍCIOS                                   R$ ${data.totalBenefits.toFixed(2).padStart(12)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║                               DESCONTOS                                   ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ FUNSEMA (14%) - Base: R$ ${data.funsemaBase.toFixed(2).padStart(8)}                 R$ ${data.funsema.toFixed(2).padStart(12)} ║
-║ IRPF - Base Cálculo: R$ ${data.irCalculationBase.toFixed(2).padStart(8)}                   R$ ${data.irpf.toFixed(2).padStart(12)} ║
-║ Plano de Saúde                                     R$ ${data.healthPlan.toFixed(2).padStart(12)} ║
-║ Vale Transporte (Desconto)                         R$ ${data.transportDiscount.toFixed(2).padStart(12)} ║
-║ Outros Descontos                                   R$ ${data.otherDeductions.toFixed(2).padStart(12)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║ TOTAL DESCONTOS                                    R$ ${data.totalDeductions.toFixed(2).padStart(12)} ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║                          VALOR LÍQUIDO A RECEBER                         ║
-╠═══════════════════════════════════════════════════════════════════════════╣
-║                                                    R$ ${data.netSalary.toFixed(2).padStart(12)} ║
-╚═══════════════════════════════════════════════════════════════════════════╝
+            const payslipHTML = `
+                <div class="employee-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">👤 Servidor:</span>
+                            <span class="info-value">${data.name || 'Não informado'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">💼 Cargo:</span>
+                            <span class="info-value">${data.position}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">🔢 Matrícula:</span>
+                            <span class="info-value">${data.registration || 'Não informado'}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">👨‍👩‍👧‍👦 Dependentes:</span>
+                            <span class="info-value">${data.dependents}</span>
+                        </div>
+                    </div>
+                </div>
 
-RESUMO DETALHADO:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                <div class="payslip-section">
+                    <div class="section-header earnings-header">
+                        💰 VENCIMENTOS TRIBUTÁVEIS
+                    </div>
+                    <div class="section-content">
+                        <div class="payslip-item">
+                            <span class="item-label">Salário Base</span>
+                            <span class="item-value">R$ ${data.baseSalary.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Risco de Vida</span>
+                            <span class="item-detail">30% do salário base</span>
+                            <span class="item-value">R$ ${data.riskLife.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">GTS - Tempo de Serviço</span>
+                            <span class="item-detail">${data.gtsPercent.toFixed(0)}% do salário base</span>
+                            <span class="item-value">R$ ${data.gtsValue.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Gratificação de Guarda Nível ${data.guardLevel}</span>
+                            <span class="item-detail">${data.guardPercent.toFixed(2)}% do salário base</span>
+                            <span class="item-value">R$ ${data.guardValue.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Horas Extras</span>
+                            <span class="item-value">R$ ${data.overtime.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Balada Segura</span>
+                            <span class="item-detail">${data.baladaQty} x R$ 300,00</span>
+                            <span class="item-value">R$ ${data.baladaValue.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item total-item">
+                            <span class="item-label">TOTAL VENCIMENTOS</span>
+                            <span class="item-value">R$ ${data.totalEarnings.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
 
-COMPOSIÇÃO DOS VENCIMENTOS:
-• Salário Base: R$ ${data.baseSalary.toFixed(2)}
-• Risco de Vida (30% do sal. base): R$ ${data.riskLife.toFixed(2)} [TRIBUTÁVEL P/ FUNSEMA]
-• GTS (${data.gtsPercent.toFixed(0)}% do sal. base): R$ ${data.gtsValue.toFixed(2)}
-• Gratificação Guarda Nível ${data.guardLevel} (${data.guardPercent.toFixed(2)}% do sal. base): R$ ${data.guardValue.toFixed(2)}
-• Horas Extras: R$ ${data.overtime.toFixed(2)}
-• Balada Segura (${data.baladaQty} unidades): R$ ${data.baladaValue.toFixed(2)}
+                <div class="payslip-section">
+                    <div class="section-header benefits-header">
+                        🎁 BENEFÍCIOS
+                    </div>
+                    <div class="section-content">
+                        <div class="payslip-item">
+                            <span class="item-label">Vale Alimentação</span>
+                            <span class="item-value">R$ ${data.mealAllowance.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Vale Transporte</span>
+                            <span class="item-value">R$ ${data.transportAllowance.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item total-item">
+                            <span class="item-label">TOTAL BENEFÍCIOS</span>
+                            <span class="item-value">R$ ${data.totalBenefits.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
 
-TOTAIS:
-• Base FUNSEMA (Sal+Risco+GTS+Grat.Guarda): R$ ${data.funsemaBase.toFixed(2)}
-• Base IRPF (Todos Venc. - FUNSEMA): R$ ${data.irCalculationBase.toFixed(2)}
-• Total Vencimentos: R$ ${data.totalEarnings.toFixed(2)}
-• Total Benefícios: R$ ${data.totalBenefits.toFixed(2)}
-• Total Descontos: R$ ${data.totalDeductions.toFixed(2)}
-• Valor Líquido: R$ ${data.netSalary.toFixed(2)}
+                <div class="payslip-section">
+                    <div class="section-header deductions-header">
+                        📉 DESCONTOS
+                    </div>
+                    <div class="section-content">
+                        <div class="payslip-item">
+                            <span class="item-label">FUNSEMA</span>
+                            <span class="item-detail">14% sobre R$ ${data.funsemaBase.toFixed(2)}</span>
+                            <span class="item-value">R$ ${data.funsema.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">IRPF</span>
+                            <span class="item-detail">Base: R$ ${data.irCalculationBase.toFixed(2)}</span>
+                            <span class="item-value">R$ ${data.irpf.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Plano de Saúde</span>
+                            <span class="item-value">R$ ${data.healthPlan.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Vale Transporte (Desconto)</span>
+                            <span class="item-value">R$ ${data.transportDiscount.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Outros Descontos</span>
+                            <span class="item-value">R$ ${data.otherDeductions.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item total-item">
+                            <span class="item-label">TOTAL DESCONTOS</span>
+                            <span class="item-value">R$ ${data.totalDeductions.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
 
-INFORMAÇÕES IMPORTANTES:
-• FUNSEMA: 14% sobre (Salário Base + Risco de Vida + GTS + Grat. Guarda)
-• IRPF: Regra específica sem dedução por dependentes
-• Risco de Vida é TRIBUTÁVEL para ambos FUNSEMA e IRPF
-• Gratificação de Guarda: Níveis com percentuais compostos
+                <div class="net-salary">
+                    <div class="net-salary-label">💎 VALOR LÍQUIDO A RECEBER</div>
+                    <div class="net-salary-value">R$ ${data.netSalary.toFixed(2)}</div>
+                </div>
 
-Gerado em: ${new Date().toLocaleString('pt-BR')}
-`;
+                <div class="calculation-details">
+                    <h4>📋 Detalhes dos Cálculos</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Base FUNSEMA</div>
+                            <div class="detail-value">R$ ${data.funsemaBase.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Base IRPF</div>
+                            <div class="detail-value">R$ ${data.irCalculationBase.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total Bruto</div>
+                            <div class="detail-value">R$ ${(data.totalEarnings + data.totalBenefits).toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Percentual Líquido</div>
+                            <div class="detail-value">${((data.netSalary / (data.totalEarnings + data.totalBenefits)) * 100).toFixed(1)}%</div>
+                        </div>
+                    </div>
+                </div>
+            `;
 
-            document.getElementById('resultText').textContent = payslip;
+            document.getElementById('payslipContainer').innerHTML = payslipHTML;
             document.getElementById('resultSection').style.display = 'block';
             document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
         }

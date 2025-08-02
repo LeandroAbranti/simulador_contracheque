@@ -459,7 +459,7 @@
                 </div>
                 <div class="form-group">
                     <label>Risco de Vida (30%):</label>
-                    <div class="calculated-value" id="riskLifeValue">R$ 1050.00</div>
+                    <div class="calculated-value" id="riskLifeValue">R$ 1211.40</div>
                 </div>
                 <div class="form-group">
                     <label for="overtime">Horas Extras (R$):</label>
@@ -495,15 +495,15 @@
                 </div>
                 <div class="radio-item">
                     <input type="radio" id="guardIII" name="guardLevel" value="III" onchange="updateCalculations()">
-                    <label for="guardII">Nível III (10.25%)</label>
+                    <label for="guardIII">Nível III (10.25%)</label>
                 </div>
                 <div class="radio-item">
                     <input type="radio" id="guardIV" name="guardLevel" value="IV" onchange="updateCalculations()">
-                    <label for="guardIII">Nível IV (15.76%)</label>
+                    <label for="guardIV">Nível IV (15.76%)</label>
                 </div>
                 <div class="radio-item">
                     <input type="radio" id="guardV" name="guardLevel" value="V" onchange="updateCalculations()">
-                    <label for="guardIV">Nível V (21.55%)</label>
+                    <label for="guardV">Nível V (21.55%)</label>
                 </div>
             </div>
             <div class="calculated-value" id="guardValue" style="margin-top: 10px;">Gratificação: R$ 0.00</div>
@@ -526,7 +526,7 @@
                 </div>
                 <div class="form-group">
                     <label for="transportAllowance">Vale Transporte (R$):</label>
-                    <input type="number" id="transportAllowance" value="" step="6.00">
+                    <input type="number" id="transportAllowance" value="0.00" step="6.00">
                 </div>
             </div>
         </div>
@@ -589,9 +589,9 @@
             const gtsValue = baseSalary * (gtsPercent / 100);
             document.getElementById('gtsValue').textContent = `R$ ${gtsValue.toFixed(2)}`;
             
-            // Gratificação de Guarda
+            // Gratificação de Guarda - Progressivo Composto
             const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
-            const guardPercentages = {"Nenhum": 0, "I": 5, "II": 10.25, "III": 15.76, "IV": 21.55};
+            const guardPercentages = {"Nenhum": 0, "II": 5, "III": 10.25, "IV": 15.76, "V": 21.55};
             const guardPercent = guardPercentages[guardLevel] || 0;
             const guardValue = baseSalary * (guardPercent / 100);
             document.getElementById('guardValue').textContent = `Gratificação: R$ ${guardValue.toFixed(2)} (${guardPercent}%)`;
@@ -637,8 +637,9 @@
                 const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
                 const gtsValue = baseSalary * (gtsPercent / 100);
                 
+                // Calcular gratificação de guarda
                 const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
-                const guardPercentages = {"Nenhum": 0, "I": 5, "II": 10.25, "III": 15.76, "IV": 21.55};
+                const guardPercentages = {"Nenhum": 0, "II": 5, "III": 10.25, "IV": 15.76, "V": 21.55};
                 const guardPercent = guardPercentages[guardLevel] || 0;
                 const guardValue = baseSalary * (guardPercent / 100);
                 
@@ -850,15 +851,15 @@
 
         function clearForm() {
             document.getElementById('name').value = '';
-            document.getElementById('position').value = '';
+            document.getElementById('position').value = 'Guarda Municipal';
             document.getElementById('registration').value = '';
             document.getElementById('dependents').value = '0';
-            document.getElementById('baseSalary').value = '0.00';
+            document.getElementById('baseSalary').value = '4038.00';
             document.getElementById('overtime').value = '0.00';
             document.getElementById('gts').value = '0';
             document.querySelector('input[value="Nenhum"]').checked = true;
             document.getElementById('baladaQty').value = '0';
-            document.getElementById('mealAllowance').value = '0.00';
+            document.getElementById('mealAllowance').value = '650.00';
             document.getElementById('transportAllowance').value = '0.00';
             document.getElementById('healthPlan').value = '0.00';
             document.getElementById('transportDiscount').value = '0.00';

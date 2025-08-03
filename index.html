@@ -461,9 +461,27 @@
                     <label>Risco de Vida (30%):</label>
                     <div class="calculated-value" id="riskLifeValue">R$ 1211.40</div>
                 </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>⏰ Horas Extras</h3>
+            <div class="form-grid">
                 <div class="form-group">
-                    <label for="overtime">Horas Extras (R$):</label>
-                    <input type="number" id="overtime" value="0.00" step="0.01">
+                    <label for="overtime100">Horas Extras 100% (Qtd):</label>
+                    <input type="number" id="overtime100" value="0" min="0" step="1" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor HE 100%:</label>
+                    <div class="calculated-value" id="overtime100Value">R$ 0.00</div>
+                </div>
+                <div class="form-group">
+                    <label for="overtime50">Horas Extras 50% (Qtd):</label>
+                    <input type="number" id="overtime50" value="0" min="0" step="1" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor HE 50%:</label>
+                    <div class="calculated-value" id="overtime50Value">R$ 0.00</div>
                 </div>
             </div>
         </div>
@@ -584,6 +602,16 @@
             const riskLife = baseSalary * 0.30;
             document.getElementById('riskLifeValue').textContent = `R$ ${riskLife.toFixed(2)}`;
             
+            // Horas Extras 100% (quantidade * 50)
+            const overtime100Qty = parseInt(document.getElementById('overtime100').value) || 0;
+            const overtime100Value = overtime100Qty * 50;
+            document.getElementById('overtime100Value').textContent = `R$ ${overtime100Value.toFixed(2)}`;
+            
+            // Horas Extras 50% (quantidade * 37.50)
+            const overtime50Qty = parseInt(document.getElementById('overtime50').value) || 0;
+            const overtime50Value = overtime50Qty * 37.50;
+            document.getElementById('overtime50Value').textContent = `R$ ${overtime50Value.toFixed(2)}`;
+            
             // GTS
             const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
             const gtsValue = baseSalary * (gtsPercent / 100);
@@ -624,7 +652,6 @@
             try {
                 // Obter valores
                 const baseSalary = parseFloat(document.getElementById('baseSalary').value) || 0;
-                const overtime = parseFloat(document.getElementById('overtime').value) || 0;
                 const mealAllowance = parseFloat(document.getElementById('mealAllowance').value) || 0;
                 const transportAllowance = parseFloat(document.getElementById('transportAllowance').value) || 0;
                 const healthPlan = parseFloat(document.getElementById('healthPlan').value) || 0;
@@ -637,6 +664,13 @@
                 const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
                 const gtsValue = baseSalary * (gtsPercent / 100);
                 
+                // Calcular horas extras
+                const overtime100Qty = parseInt(document.getElementById('overtime100').value) || 0;
+                const overtime100Value = overtime100Qty * 50;
+                const overtime50Qty = parseInt(document.getElementById('overtime50').value) || 0;
+                const overtime50Value = overtime50Qty * 37.50;
+                const totalOvertimeValue = overtime100Value + overtime50Value;
+                
                 // Calcular gratificação de guarda
                 const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
                 const guardPercentages = {"Nenhum": 0, "II": 5, "III": 10.25, "IV": 15.76, "V": 21.55};
@@ -648,12 +682,12 @@
 
                 // Calcular bases
                 const funsemaBase = baseSalary + riskLife + gtsValue + guardValue;
-                const totalEarnings = baseSalary + riskLife + gtsValue + guardValue + overtime + baladaValue;
+                const totalEarnings = baseSalary + riskLife + gtsValue + guardValue + totalOvertimeValue + baladaValue;
                 const totalBenefits = mealAllowance + transportAllowance;
 
                 // Calcular descontos
                 const funsema = document.getElementById('funsemaAuto').checked ? calculateFunsema(funsemaBase) : 0;
-                const irCalculationBase = baseSalary + riskLife + gtsValue + guardValue + overtime + baladaValue - funsema;
+                const irCalculationBase = baseSalary + riskLife + gtsValue + guardValue + totalOvertimeValue + baladaValue - funsema;
                 let irpf = document.getElementById('irpfAuto').checked ? calculateIRPF(irCalculationBase) : 0;
                 if (irpf < 0) irpf = 0;
 
@@ -668,7 +702,11 @@
                     dependents,
                     baseSalary,
                     riskLife,
-                    overtime,
+                    overtime100Qty,
+                    overtime100Value,
+                    overtime50Qty,
+                    overtime50Value,
+                    totalOvertimeValue,
                     gtsValue,
                     gtsPercent,
                     guardValue,
@@ -747,8 +785,14 @@
                             <span class="item-value">R$ ${data.guardValue.toFixed(2)}</span>
                         </div>
                         <div class="payslip-item">
-                            <span class="item-label">Horas Extras</span>
-                            <span class="item-value">R$ ${data.overtime.toFixed(2)}</span>
+                            <span class="item-label">Horas Extras 100%</span>
+                            <span class="item-detail">${data.overtime100Qty} x R$ 50,00</span>
+                            <span class="item-value">R$ ${data.overtime100Value.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Horas Extras 50%</span>
+                            <span class="item-detail">${data.overtime50Qty} x R$ 37,50</span>
+                            <span class="item-value">R$ ${data.overtime50Value.toFixed(2)}</span>
                         </div>
                         <div class="payslip-item">
                             <span class="item-label">Balada Segura</span>
@@ -840,6 +884,14 @@
                             <div class="detail-label">Percentual Líquido</div>
                             <div class="detail-value">${((data.netSalary / (data.totalEarnings + data.totalBenefits)) * 100).toFixed(1)}%</div>
                         </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total HE 100%</div>
+                            <div class="detail-value">${data.overtime100Qty}h - R$ ${data.overtime100Value.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total HE 50%</div>
+                            <div class="detail-value">${data.overtime50Qty}h - R$ ${data.overtime50Value.toFixed(2)}</div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -855,7 +907,8 @@
             document.getElementById('registration').value = '';
             document.getElementById('dependents').value = '0';
             document.getElementById('baseSalary').value = '4038.00';
-            document.getElementById('overtime').value = '0.00';
+            document.getElementById('overtime100').value = '0';
+            document.getElementById('overtime50').value = '0';
             document.getElementById('gts').value = '0';
             document.querySelector('input[value="Nenhum"]').checked = true;
             document.getElementById('baladaQty').value = '0';

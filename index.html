@@ -615,7 +615,6 @@
                     <label>Valor GTS:</label>
                     <div class="calculated-value" id="gtsValue">R$ 0.00</div>
                 </div>
-<<<<<<< HEAD
                 <div class="form-group">
                     <label for="gratifiedFunction">Função Gratificada (R$):</label>
                     <input type="number" id="gratifiedFunction" value="1270.00" step="0.01" oninput="updateCalculations()">
@@ -624,8 +623,6 @@
                     <label>Valor Função Gratificada:</label>
                     <div class="calculated-value" id="gratifiedFunctionValue">R$ 1270.00</div>
                 </div>
-=======
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
             </div>
         </div>
 
@@ -668,13 +665,8 @@
                     <div class="calculated-value" id="baladaValue">R$ 0.00</div>
                 </div>
                 <div class="form-group">
-<<<<<<< HEAD
                     <label>Vale Alimentação (R$):</label>
                     <div class="calculated-value" id="mealAllowanceValue">R$ 650.00</div>
-=======
-                    <label for="mealAllowance">Vale Alimentação (R$):</label>
-                    <input type="number" id="mealAllowance" value="650.00" step="0.01">
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                 </div>
                 <div class="form-group">
                     <label for="transportAllowance">Vale Transporte (R$):</label>
@@ -751,13 +743,10 @@
             const gtsValue = baseSalary * (gtsPercent / 100);
             document.getElementById('gtsValue').textContent = `R$ ${gtsValue.toFixed(2)}`;
             
-<<<<<<< HEAD
             // Função Gratificada
             const gratifiedFunction = parseFloat(document.getElementById('gratifiedFunction').value) || 0;
             document.getElementById('gratifiedFunctionValue').textContent = `R$ ${gratifiedFunction.toFixed(2)}`;
             
-=======
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
             // Gratificação de Guarda - Progressivo Composto
             const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
             const guardPercentages = {"Nenhum": 0, "II": 5, "III": 10.25, "IV": 15.76, "V": 21.55};
@@ -767,17 +756,12 @@
             
             // Balada Segura
             const baladaQty = parseInt(document.getElementById('baladaQty').value) || 0;
-<<<<<<< HEAD
             const baladaValue = baladaQty * 304.75;
             document.getElementById('baladaValue').textContent = `R$ ${baladaValue.toFixed(2)}`;
             
             // Vale Alimentação (650 + 33 por balada segura)
             const mealAllowance = 650.00 + (baladaQty * 33.00);
             document.getElementById('mealAllowanceValue').textContent = `R$ ${mealAllowance.toFixed(2)}`;
-=======
-            const baladaValue = baladaQty * 300.00;
-            document.getElementById('baladaValue').textContent = `R$ ${baladaValue.toFixed(2)}`;
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
         }
 
         function calculateFunsema(salary) {
@@ -802,10 +786,6 @@
             try {
                 // Obter valores
                 const baseSalary = parseFloat(document.getElementById('baseSalary').value) || 0;
-<<<<<<< HEAD
-=======
-                const mealAllowance = parseFloat(document.getElementById('mealAllowance').value) || 0;
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                 const transportAllowance = parseFloat(document.getElementById('transportAllowance').value) || 0;
                 const healthPlan = parseFloat(document.getElementById('healthPlan').value) || 0;
                 const transportDiscount = parseFloat(document.getElementById('transportDiscount').value) || 0;
@@ -816,10 +796,7 @@
                 const riskLife = baseSalary * 0.30;
                 const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
                 const gtsValue = baseSalary * (gtsPercent / 100);
-<<<<<<< HEAD
                 const gratifiedFunction = parseFloat(document.getElementById('gratifiedFunction').value) || 0;
-=======
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                 
                 // Calcular horas extras
                 const overtime100Qty = parseInt(document.getElementById('overtime100').value) || 0;
@@ -835,7 +812,6 @@
                 const guardValue = baseSalary * (guardPercent / 100);
                 
                 const baladaQty = parseInt(document.getElementById('baladaQty').value) || 0;
-<<<<<<< HEAD
                 const baladaValue = baladaQty * 304.75;
                 
                 // Calcular vale alimentação (650 + 33 por balada segura)
@@ -844,22 +820,11 @@
                 // Calcular bases
                 const funsemaBase = baseSalary + riskLife + gtsValue + guardValue;
                 const totalEarnings = baseSalary + riskLife + gtsValue + gratifiedFunction + guardValue + totalOvertimeValue + baladaValue;
-=======
-                const baladaValue = baladaQty * 300.00;
-
-                // Calcular bases
-                const funsemaBase = baseSalary + riskLife + gtsValue + guardValue;
-                const totalEarnings = baseSalary + riskLife + gtsValue + guardValue + totalOvertimeValue + baladaValue;
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                 const totalBenefits = mealAllowance + transportAllowance;
 
                 // Calcular descontos
                 const funsema = document.getElementById('funsemaAuto').checked ? calculateFunsema(funsemaBase) : 0;
-<<<<<<< HEAD
                 const irCalculationBase = baseSalary + riskLife + gtsValue + gratifiedFunction + guardValue + totalOvertimeValue + baladaValue - funsema;
-=======
-                const irCalculationBase = baseSalary + riskLife + gtsValue + guardValue + totalOvertimeValue + baladaValue - funsema;
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                 let irpf = document.getElementById('irpfAuto').checked ? calculateIRPF(irCalculationBase) : 0;
                 if (irpf < 0) irpf = 0;
 
@@ -879,10 +844,7 @@
                     totalOvertimeValue,
                     gtsValue,
                     gtsPercent,
-<<<<<<< HEAD
                     gratifiedFunction,
-=======
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                     guardValue,
                     guardPercent,
                     guardLevel,
@@ -946,14 +908,11 @@
                             <span class="item-value">R$ ${data.gtsValue.toFixed(2)}</span>
                         </div>
                         <div class="payslip-item">
-<<<<<<< HEAD
                             <span class="item-label">Função Gratificada</span>
                             <span class="item-detail">Valor fixo</span>
                             <span class="item-value">R$ ${data.gratifiedFunction.toFixed(2)}</span>
                         </div>
                         <div class="payslip-item">
-=======
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                             <span class="item-label">Gratificação de Guarda Nível ${data.guardLevel}</span>
                             <span class="item-detail">${data.guardPercent.toFixed(2)}% do salário base</span>
                             <span class="item-value">R$ ${data.guardValue.toFixed(2)}</span>
@@ -970,11 +929,7 @@
                         </div>
                         <div class="payslip-item">
                             <span class="item-label">Balada Segura</span>
-<<<<<<< HEAD
                             <span class="item-detail">${data.baladaQty} x R$ 304,75</span>
-=======
-                            <span class="item-detail">${data.baladaQty} x R$ 300,00</span>
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                             <span class="item-value">R$ ${data.baladaValue.toFixed(2)}</span>
                         </div>
                         <div class="payslip-item total-item">
@@ -991,10 +946,7 @@
                     <div class="section-content">
                         <div class="payslip-item">
                             <span class="item-label">Vale Alimentação</span>
-<<<<<<< HEAD
                             <span class="item-detail">R$ 650,00 + ${data.baladaQty} x R$ 33,00</span>
-=======
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
                             <span class="item-value">R$ ${data.mealAllowance.toFixed(2)}</span>
                         </div>
                         <div class="payslip-item">
@@ -1090,15 +1042,9 @@
             document.getElementById('overtime100').value = '0';
             document.getElementById('overtime50').value = '0';
             document.getElementById('gts').value = '0';
-<<<<<<< HEAD
             document.getElementById('gratifiedFunction').value = '1270.00';
             document.querySelector('input[value="Nenhum"]').checked = true;
             document.getElementById('baladaQty').value = '0';
-=======
-            document.querySelector('input[value="Nenhum"]').checked = true;
-            document.getElementById('baladaQty').value = '0';
-            document.getElementById('mealAllowance').value = '650.00';
->>>>>>> 9932f27f00bc1647733a2423da3d7f6b0f33595a
             document.getElementById('transportAllowance').value = '0.00';
             document.getElementById('healthPlan').value = '0.00';
             document.getElementById('transportDiscount').value = '0.00';

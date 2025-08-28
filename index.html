@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏛️ Simulador de Contracheque - Servidor Público</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8, #1e40af);
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .form-section {
+            margin: 25px;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .form-section h3 {
+            color: #1e293b;
+            margin-bottom: 18px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            padding: 12px;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            color: #1f2937;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .calculated-value {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            box-shadow: 0 2px 4px rgba(22, 101, 52, 0.1);
+        }
+
+        .buttons {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            box-shadow: 0 8px 25px 0 rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn.secondary {
+            background: #6b7280;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn.secondary:hover {
+            background: #4b5563;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* NOVA SEÇÃO DE RESULTADO MODERNIZADA */
+        .result-section {
+            margin: 25px;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: #ffffff;
+            padding: 24px;
+            text-align: center;
+            border-bottom: 1px solid #334155;
+            position: relative;
+        }
+
+        .result-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #e74c3c, #f39c12, #2ecc71);
+        }
+
+        .result-header h3 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .result-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .payslip-container {
+            padding: 25px;
+            background: #ffffff;
+        }
+
+        .employee-info {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .employee-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #64748b, #475569);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-label {
+            font-weight: 700;
+            color: #1e293b;
+            min-width: 100px;
+        }
+
+        .info-value {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .payslip-section {
+            margin-bottom: 25px;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .section-header {
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .earnings-header {
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        }
+
+        .benefits-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .deductions-header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .summary-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .section-content {
+            padding: 0;
+        }
+
+        .payslip-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            transition: all 0.3s ease;
+        }
+
+        .payslip-item:hover {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .payslip-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-label {
+            font-weight: 500;
+            color: #374151;
+            flex: 1;
+        }
+
+        .item-detail {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-right: 15px;
+        }
+
+        .item-value {
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 1.1rem;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .total-item {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-top: 2px solid #cbd5e1;
+        }
+
+        .total-item .item-value {
+            color: #1f2937;
+            font-size: 1.2rem;
+        }
+
+        .net-salary {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 12px;
+            border: 1px solid #bbf7d0;
+            box-shadow: 0 8px 25px -5px rgba(22, 101, 52, 0.25);
+            position: relative;
+        }
+
+        .net-salary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #16a34a, #15803d, #166534);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .net-salary-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #166534;
+            margin-bottom: 10px;
+        }
+
+        .net-salary-value {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #166534;
+        }
+
+        .calculation-details {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 24px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .calculation-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #64748b, #475569);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .calculation-details h4 {
+            color: #1e293b;
+            margin-bottom: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .detail-label {
+            font-weight: 700;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .detail-value {
+            color: #1e293b;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 4px;
+        }
+
+        .print-button {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 24px auto;
+            display: block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px 0 rgba(8, 145, 178, 0.39);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .print-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .print-button:hover::before {
+            left: 100%;
+        }
+
+        .print-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px 0 rgba(8, 145, 178, 0.5);
+            background: linear-gradient(135deg, #0e7490 0%, #155e75 100%);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .header h1 {
+                font-size: 1.4rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .payslip-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .item-value {
+                align-self: flex-end;
+            }
+
+            .net-salary-value {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Simulador do Guarda - Servidor Público</h1>
+            <p>Devops. Abranti</p>
+        </div>
+
+        <div class="form-section">
+            <h3>📋 Dados do Servidor</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="position">Cargo:</label>
+                    <input type="text" id="position" value="Guarda Municipal">
+                </div>
+                <div class="form-group">
+                    <label for="dependents">Dependentes IR:</label>
+                    <input type="number" id="dependents" value="0" min="0" max="10">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>💰 Vencimentos Base</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="baseSalary">Salário Base (R$):</label>
+                    <input type="number" id="baseSalary" value="4038.00" step="0.01" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Risco de Vida (30%):</label>
+                    <div class="calculated-value" id="riskLifeValue">R$ 1211.40</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>⏰ Horas Extras</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="overtime100">Horas Extras 100% (Qtd):</label>
+                    <input type="number" id="overtime100" value="0" min="0" step="1" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor HE 100%:</label>
+                    <div class="calculated-value" id="overtime100Value">R$ 0.00</div>
+                </div>
+                <div class="form-group">
+                    <label for="overtime50">Horas Extras 50% (Qtd):</label>
+                    <input type="number" id="overtime50" value="0" min="0" step="1" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor HE 50%:</label>
+                    <div class="calculated-value" id="overtime50Value">R$ 0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>🎖️ Gratificações</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="gts">GTS - Tempo de Serviço (%):</label>
+                    <input type="number" id="gts" value="0" min="0" max="100" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor GTS:</label>
+                    <div class="calculated-value" id="gtsValue">R$ 0.00</div>
+                </div>
+                <div class="form-group">
+                    <label for="gratifiedFunction">Função Gratificada (R$):</label>
+                    <input type="number" id="gratifiedFunction" value="1270.00" step="0.01" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor Função Gratificada:</label>
+                    <div class="calculated-value" id="gratifiedFunctionValue">R$ 1270.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>🛡️ Gratificação de Guarda</h3>
+            <div class="radio-group">
+                <div class="radio-item">
+                    <input type="radio" id="guardNone" name="guardLevel" value="Nenhum" checked onchange="updateCalculations()">
+                    <label for="guardNone">Nenhum</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardII" name="guardLevel" value="II" onchange="updateCalculations()">
+                    <label for="guardII">Nível II (5%)</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardIII" name="guardLevel" value="III" onchange="updateCalculations()">
+                    <label for="guardIII">Nível III (10.25%)</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardIV" name="guardLevel" value="IV" onchange="updateCalculations()">
+                    <label for="guardIV">Nível IV (15.76%)</label>
+                </div>
+                <div class="radio-item">
+                    <input type="radio" id="guardV" name="guardLevel" value="V" onchange="updateCalculations()">
+                    <label for="guardV">Nível V (21.55%)</label>
+                </div>
+            </div>
+            <div class="calculated-value" id="guardValue" style="margin-top: 10px;">Gratificação: R$ 0.00</div>
+        </div>
+
+        <div class="form-section">
+            <h3>➕ Adicionais</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="baladaQty">Balada Segura (Qtd):</label>
+                    <input type="number" id="baladaQty" value="0" min="0" oninput="updateCalculations()">
+                </div>
+                <div class="form-group">
+                    <label>Valor Balada Segura:</label>
+                    <div class="calculated-value" id="baladaValue">R$ 0.00</div>
+                </div>
+                <div class="form-group">
+                    <label>Vale Alimentação (R$):</label>
+                    <div class="calculated-value" id="mealAllowanceValue">R$ 650.00</div>
+                </div>
+                <div class="form-group">
+                    <label for="transportAllowance">Vale Transporte (R$):</label>
+                    <input type="number" id="transportAllowance" value="0.00" step="6.00">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>📉 Descontos</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="funsemaAuto" checked> FUNSEMA (14% - Automático)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="irpfAuto" checked> IRPF (Automático)
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="healthPlan">Plano de Saúde (R$):</label>
+                    <input type="number" id="healthPlan" value="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="transportDiscount">Vale Transporte (Desconto):</label>
+                    <input type="number" id="transportDiscount" value="0.00" step="3.00">
+                </div>
+                <div class="form-group">
+                    <label for="otherDeductions">Outros Descontos (R$):</label>
+                    <input type="number" id="otherDeductions" value="0.00" step="40.00">
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button class="btn" onclick="calculatePayroll()">🧮 Calcular Contracheque</button>
+            <button class="btn secondary" onclick="clearForm()">🗑️ Limpar</button>
+        </div>
+
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-header">
+                <h3>📊 Contracheque - Servidor Público</h3>
+                <div class="result-date" id="resultDate"></div>
+            </div>
+            <div class="payslip-container" id="payslipContainer">
+                <!-- Conteúdo será inserido dinamicamente -->
+            </div>
+            <button class="print-button" onclick="window.print()">🖨️ Imprimir Contracheque</button>
+        </div>
+    </div>
+
+    <script>
+        function updateCalculations() {
+            const baseSalary = parseFloat(document.getElementById('baseSalary').value) || 0;
+            
+            // Risco de vida (30%)
+            const riskLife = baseSalary * 0.30;
+            document.getElementById('riskLifeValue').textContent = `R$ ${riskLife.toFixed(2)}`;
+            
+            // Horas Extras 100% (quantidade * 50)
+            const overtime100Qty = parseInt(document.getElementById('overtime100').value) || 0;
+            const overtime100Value = overtime100Qty * 50;
+            document.getElementById('overtime100Value').textContent = `R$ ${overtime100Value.toFixed(2)}`;
+            
+            // Horas Extras 50% (quantidade * 37.50)
+            const overtime50Qty = parseInt(document.getElementById('overtime50').value) || 0;
+            const overtime50Value = overtime50Qty * 37.50;
+            document.getElementById('overtime50Value').textContent = `R$ ${overtime50Value.toFixed(2)}`;
+            
+            // GTS
+            const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
+            const gtsValue = baseSalary * (gtsPercent / 100);
+            document.getElementById('gtsValue').textContent = `R$ ${gtsValue.toFixed(2)}`;
+            
+            // Função Gratificada
+            const gratifiedFunction = parseFloat(document.getElementById('gratifiedFunction').value) || 0;
+            document.getElementById('gratifiedFunctionValue').textContent = `R$ ${gratifiedFunction.toFixed(2)}`;
+            
+            // Gratificação de Guarda - Progressivo Composto
+            const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
+            const guardPercentages = {"Nenhum": 0, "II": 5, "III": 10.25, "IV": 15.76, "V": 21.55};
+            const guardPercent = guardPercentages[guardLevel] || 0;
+            const guardValue = baseSalary * (guardPercent / 100);
+            document.getElementById('guardValue').textContent = `Gratificação: R$ ${guardValue.toFixed(2)} (${guardPercent}%)`;
+            
+            // Balada Segura
+            const baladaQty = parseInt(document.getElementById('baladaQty').value) || 0;
+            const baladaValue = baladaQty * 304.75;
+            document.getElementById('baladaValue').textContent = `R$ ${baladaValue.toFixed(2)}`;
+            
+            // Vale Alimentação (650 + 33 por balada segura)
+            const mealAllowance = 650.00 + (baladaQty * 33.00);
+            document.getElementById('mealAllowanceValue').textContent = `R$ ${mealAllowance.toFixed(2)}`;
+        }
+
+        function calculateFunsema(salary) {
+            return salary * 0.14;
+        }
+
+        function calculateIRPF(baseCalculation) {
+            if (baseCalculation <= 2259.20) {
+                return 0;
+            } else if (baseCalculation >= 2259.21 && baseCalculation <= 2826.65) {
+                return baseCalculation * 0.075 - 170.00;
+            } else if (baseCalculation >= 2826.66 && baseCalculation <= 3751.05) {
+                return baseCalculation * 0.15 - 381.44;
+            } else if (baseCalculation >= 3751.06 && baseCalculation <= 4663.99) {
+                return baseCalculation * 0.225 - 663.00;
+            } else {
+                return baseCalculation * 0.275 - 896.00;
+            }
+        }
+
+        function calculatePayroll() {
+            try {
+                // Obter valores
+                const baseSalary = parseFloat(document.getElementById('baseSalary').value) || 0;
+                const transportAllowance = parseFloat(document.getElementById('transportAllowance').value) || 0;
+                const healthPlan = parseFloat(document.getElementById('healthPlan').value) || 0;
+                const transportDiscount = parseFloat(document.getElementById('transportDiscount').value) || 0;
+                const otherDeductions = parseFloat(document.getElementById('otherDeductions').value) || 0;
+                const dependents = parseInt(document.getElementById('dependents').value) || 0;
+
+                // Calcular valores automáticos
+                const riskLife = baseSalary * 0.30;
+                const gtsPercent = parseFloat(document.getElementById('gts').value) || 0;
+                const gtsValue = baseSalary * (gtsPercent / 100);
+                const gratifiedFunction = parseFloat(document.getElementById('gratifiedFunction').value) || 0;
+                
+                // Calcular horas extras
+                const overtime100Qty = parseInt(document.getElementById('overtime100').value) || 0;
+                const overtime100Value = overtime100Qty * 50;
+                const overtime50Qty = parseInt(document.getElementById('overtime50').value) || 0;
+                const overtime50Value = overtime50Qty * 37.50;
+                const totalOvertimeValue = overtime100Value + overtime50Value;
+                
+                // Calcular gratificação de guarda
+                const guardLevel = document.querySelector('input[name="guardLevel"]:checked').value;
+                const guardPercentages = {"Nenhum": 0, "II": 5, "III": 10.25, "IV": 15.76, "V": 21.55};
+                const guardPercent = guardPercentages[guardLevel] || 0;
+                const guardValue = baseSalary * (guardPercent / 100);
+                
+                const baladaQty = parseInt(document.getElementById('baladaQty').value) || 0;
+                const baladaValue = baladaQty * 304.75;
+                
+                // Calcular vale alimentação (650 + 33 por balada segura)
+                const mealAllowance = 650.00 + (baladaQty * 33.00);
+
+                // Calcular bases
+                const funsemaBase = baseSalary + riskLife + gtsValue + guardValue;
+                const totalEarnings = baseSalary + riskLife + gtsValue + gratifiedFunction + guardValue + totalOvertimeValue + baladaValue;
+                const totalBenefits = mealAllowance + transportAllowance;
+
+                // Calcular descontos
+                const funsema = document.getElementById('funsemaAuto').checked ? calculateFunsema(funsemaBase) : 0;
+                const irCalculationBase = baseSalary + riskLife + gtsValue + gratifiedFunction + guardValue + totalOvertimeValue + baladaValue - funsema;
+                let irpf = document.getElementById('irpfAuto').checked ? calculateIRPF(irCalculationBase) : 0;
+                if (irpf < 0) irpf = 0;
+
+                const totalDeductions = funsema + irpf + healthPlan + transportDiscount + otherDeductions;
+                const netSalary = totalEarnings + totalBenefits - totalDeductions;
+
+                // Gerar contracheque moderno
+                generateModernPayslip({
+                    position: document.getElementById('position').value,
+                    dependents,
+                    baseSalary,
+                    riskLife,
+                    overtime100Qty,
+                    overtime100Value,
+                    overtime50Qty,
+                    overtime50Value,
+                    totalOvertimeValue,
+                    gtsValue,
+                    gtsPercent,
+                    gratifiedFunction,
+                    guardValue,
+                    guardPercent,
+                    guardLevel,
+                    baladaValue,
+                    baladaQty,
+                    mealAllowance,
+                    transportAllowance,
+                    funsemaBase,
+                    irCalculationBase,
+                    totalEarnings,
+                    totalBenefits,
+                    funsema,
+                    irpf,
+                    healthPlan,
+                    transportDiscount,
+                    otherDeductions,
+                    totalDeductions,
+                    netSalary
+                });
+
+            } catch (error) {
+                alert('Erro no cálculo. Verifique os valores inseridos.');
+            }
+        }
+
+        function generateModernPayslip(data) {
+            const currentDate = new Date().toLocaleDateString('pt-BR');
+            document.getElementById('resultDate').textContent = currentDate;
+            
+            const payslipHTML = `
+                <div class="employee-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">💼 Cargo:</span>
+                            <span class="info-value">${data.position}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">👨‍👩‍👧‍👦 Dependentes:</span>
+                            <span class="info-value">${data.dependents}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payslip-section">
+                    <div class="section-header earnings-header">
+                        💰 VENCIMENTOS TRIBUTÁVEIS
+                    </div>
+                    <div class="section-content">
+                        <div class="payslip-item">
+                            <span class="item-label">Salário Base</span>
+                            <span class="item-value">R$ ${data.baseSalary.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Risco de Vida</span>
+                            <span class="item-detail">30% do salário base</span>
+                            <span class="item-value">R$ ${data.riskLife.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">GTS - Tempo de Serviço</span>
+                            <span class="item-detail">${data.gtsPercent.toFixed(0)}% do salário base</span>
+                            <span class="item-value">R$ ${data.gtsValue.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Função Gratificada</span>
+                            <span class="item-detail">Valor fixo</span>
+                            <span class="item-value">R$ ${data.gratifiedFunction.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Gratificação de Guarda Nível ${data.guardLevel}</span>
+                            <span class="item-detail">${data.guardPercent.toFixed(2)}% do salário base</span>
+                            <span class="item-value">R$ ${data.guardValue.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Horas Extras 100%</span>
+                            <span class="item-detail">${data.overtime100Qty} x R$ 50,00</span>
+                            <span class="item-value">R$ ${data.overtime100Value.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Horas Extras 50%</span>
+                            <span class="item-detail">${data.overtime50Qty} x R$ 37,50</span>
+                            <span class="item-value">R$ ${data.overtime50Value.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Balada Segura</span>
+                            <span class="item-detail">${data.baladaQty} x R$ 304,75</span>
+                            <span class="item-value">R$ ${data.baladaValue.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item total-item">
+                            <span class="item-label">TOTAL VENCIMENTOS</span>
+                            <span class="item-value">R$ ${data.totalEarnings.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payslip-section">
+                    <div class="section-header benefits-header">
+                        🎁 BENEFÍCIOS
+                    </div>
+                    <div class="section-content">
+                        <div class="payslip-item">
+                            <span class="item-label">Vale Alimentação</span>
+                            <span class="item-detail">R$ 650,00 + ${data.baladaQty} x R$ 33,00</span>
+                            <span class="item-value">R$ ${data.mealAllowance.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Vale Transporte</span>
+                            <span class="item-value">R$ ${data.transportAllowance.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item total-item">
+                            <span class="item-label">TOTAL BENEFÍCIOS</span>
+                            <span class="item-value">R$ ${data.totalBenefits.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payslip-section">
+                    <div class="section-header deductions-header">
+                        📉 DESCONTOS
+                    </div>
+                    <div class="section-content">
+                        <div class="payslip-item">
+                            <span class="item-label">FUNSEMA</span>
+                            <span class="item-detail">14% sobre R$ ${data.funsemaBase.toFixed(2)}</span>
+                            <span class="item-value">R$ ${data.funsema.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">IRPF</span>
+                            <span class="item-detail">Base: R$ ${data.irCalculationBase.toFixed(2)}</span>
+                            <span class="item-value">R$ ${data.irpf.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Plano de Saúde</span>
+                            <span class="item-value">R$ ${data.healthPlan.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Vale Transporte (Desconto)</span>
+                            <span class="item-value">R$ ${data.transportDiscount.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item">
+                            <span class="item-label">Outros Descontos</span>
+                            <span class="item-value">R$ ${data.otherDeductions.toFixed(2)}</span>
+                        </div>
+                        <div class="payslip-item total-item">
+                            <span class="item-label">TOTAL DESCONTOS</span>
+                            <span class="item-value">R$ ${data.totalDeductions.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="net-salary">
+                    <div class="net-salary-label">💎 VALOR LÍQUIDO A RECEBER</div>
+                    <div class="net-salary-value">R$ ${data.netSalary.toFixed(2)}</div>
+                </div>
+
+                <div class="calculation-details">
+                    <h4>📋 Detalhes dos Cálculos</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Base FUNSEMA</div>
+                            <div class="detail-value">R$ ${data.funsemaBase.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Base IRPF</div>
+                            <div class="detail-value">R$ ${data.irCalculationBase.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total Bruto</div>
+                            <div class="detail-value">R$ ${(data.totalEarnings + data.totalBenefits).toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Percentual Líquido</div>
+                            <div class="detail-value">${((data.netSalary / (data.totalEarnings + data.totalBenefits)) * 100).toFixed(1)}%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total HE 100%</div>
+                            <div class="detail-value">${data.overtime100Qty}h - R$ ${data.overtime100Value.toFixed(2)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total HE 50%</div>
+                            <div class="detail-value">${data.overtime50Qty}h - R$ ${data.overtime50Value.toFixed(2)}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('payslipContainer').innerHTML = payslipHTML;
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function clearForm() {
+            document.getElementById('position').value = 'Guarda Municipal';
+            document.getElementById('dependents').value = '0';
+            document.getElementById('baseSalary').value = '4038.00';
+            document.getElementById('overtime100').value = '0';
+            document.getElementById('overtime50').value = '0';
+            document.getElementById('gts').value = '0';
+            document.getElementById('gratifiedFunction').value = '1270.00';
+            document.querySelector('input[value="Nenhum"]').checked = true;
+            document.getElementById('baladaQty').value = '0';
+            document.getElementById('transportAllowance').value = '0.00';
+            document.getElementById('healthPlan').value = '0.00';
+            document.getElementById('transportDiscount').value = '0.00';
+            document.getElementById('otherDeductions').value = '0.00';
+            document.getElementById('resultSection').style.display = 'none';
+            updateCalculations();
+        }
+
+        // Inicializar cálculos
+        updateCalculations();
+    </script>
+</body>
+</html>

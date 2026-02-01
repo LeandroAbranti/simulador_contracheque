@@ -770,8 +770,8 @@
 
         function calculateIRPF(baseCalculation, grossIncome) {
             // Nova regra de cálculo do IRPF
-            // Ajuste: O redutor e a isenção agora consideram a BASE DE CÁLCULO (pós deduções) e não o Bruto.
-            // Isso alinha com o comportamento solicitado onde o redutor deve ser aplicado mesmo para bases maiores.
+            // Ajuste: O redutor e a isenção consideram o RENDIMENTO TRIBUTÁVEL (Bruto) para enquadramento e coeficiente,
+            // enquanto o cálculo base do imposto continua sobre a base de cálculo (após deduções).
             
             let details = {
                 baseTax: 0,
@@ -780,21 +780,21 @@
                 applied: false
             };
 
-            // 1. Isenção para rendimentos tributáveis (Base de Cálculo) abaixo de R$ 5.000,00
-            if (baseCalculation <= 5000.00) {
+            // 1. Isenção para rendimentos tributáveis (Bruto) abaixo de R$ 5.000,00
+            if (grossIncome <= 5000.00) {
                 return { finalTax: 0, details };
             }
 
             // Cálculo do IRRF Base (Alíquota de 27,5% com dedução ajustada de R$ 908,73)
+            // A base de cálculo do imposto continua sendo (Bruto - Deduções)
             let irTax = (baseCalculation * 0.275) - 908.73;
             details.baseTax = irTax > 0 ? irTax : 0;
 
-            // 2. Redutor Adicional para faixa R$ 5.000,01 a R$ 7.350,00 (Considerando Base de Cálculo)
-            // Se a base for maior que 7350, o redutor seria negativo, então a verificação cobre.
-            if (baseCalculation <= 7350.00) {
-                // Fórmula do Redutor: 978,61 – (0,133145 × Base de Cálculo)
+            // 2. Redutor Adicional para faixa R$ 5.000,01 a R$ 7.350,00 (Considerando Bruto)
+            if (grossIncome <= 7350.00) {
+                // Fórmula do Redutor: 978,61 – (0,133145 × Rendimento Tributável)
                 // Usando toFixed(2) para alinhar arredondamentos intermediários
-                const coeficiente = parseFloat((0.133145 * baseCalculation).toFixed(2));
+                const coeficiente = parseFloat((0.133145 * grossIncome).toFixed(2));
                 const redutor = 978.61 - coeficiente;
                 
                 // Aplica o redutor se for positivo

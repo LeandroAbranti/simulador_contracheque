@@ -61,15 +61,15 @@ Sistema web desenvolvido para simular e calcular contracheques de servidores pú
 | IV    | 15,76%     | Sobre salário base |
 | V     | 21,55%     | Sobre salário base |
 
-### 📊 Tabela IRPF 2024
+### 📊 Tabela IRPF 2026 (Atualizada)
 
-| Faixa Salarial | Alíquota | Parcela a Deduzir |
-|----------------|----------|------------------|
-| Até R$ 2.259,20 | Isento | - |
-| R$ 2.259,21 a R$ 2.826,65 | 7,5% | R$ 170,00 |
-| R$ 2.826,66 a R$ 3.751,05 | 15% | R$ 381,44 |
-| R$ 3.751,06 a R$ 4.663,99 | 22,5% | R$ 663,00 |
-| Acima de R$ 4.664,00 | 27,5% | R$ 896,00 |
+| Faixa de Base de Cálculo | Regra de Cálculo |
+|-------------------------|------------------|
+| Até R$ 5.000,00 | Isento |
+| R$ 5.000,01 a R$ 7.350,00 | Aplicação de Redutor Adicional sobre o IR Base |
+| Acima de R$ 7.350,00 | 27,5% - R$ 908,73 (Dedução) |
+
+**Nota**: O redutor para a faixa intermediária é calculado decrescendo o imposto conforme a renda aumenta, zerando em R$ 7.350,00.
 
 ## 🖼️ Screenshots
 

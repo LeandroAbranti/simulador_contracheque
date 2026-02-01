@@ -768,18 +768,45 @@
             return salary * 0.14;
         }
 
-        function calculateIRPF(baseCalculation) {
-            if (baseCalculation <= 2259.20) {
-                return 0;
-            } else if (baseCalculation >= 2259.21 && baseCalculation <= 2826.65) {
-                return baseCalculation * 0.075 - 170.00;
-            } else if (baseCalculation >= 2826.66 && baseCalculation <= 3751.05) {
-                return baseCalculation * 0.15 - 381.44;
-            } else if (baseCalculation >= 3751.06 && baseCalculation <= 4663.99) {
-                return baseCalculation * 0.225 - 663.00;
-            } else {
-                return baseCalculation * 0.275 - 896.00;
+        function calculateIRPF(baseCalculation, grossIncome) {
+            // Nova regra de cálculo do IRPF
+            // Ajuste: O redutor e a isenção agora consideram a BASE DE CÁLCULO (pós deduções) e não o Bruto.
+            // Isso alinha com o comportamento solicitado onde o redutor deve ser aplicado mesmo para bases maiores.
+            
+            let details = {
+                baseTax: 0,
+                redutor: 0,
+                finalTax: 0,
+                applied: false
+            };
+
+            // 1. Isenção para rendimentos tributáveis (Base de Cálculo) abaixo de R$ 5.000,00
+            if (baseCalculation <= 5000.00) {
+                return { finalTax: 0, details };
             }
+
+            // Cálculo do IRRF Base (Alíquota de 27,5% com dedução ajustada de R$ 908,73)
+            let irTax = (baseCalculation * 0.275) - 908.73;
+            details.baseTax = irTax > 0 ? irTax : 0;
+
+            // 2. Redutor Adicional para faixa R$ 5.000,01 a R$ 7.350,00 (Considerando Base de Cálculo)
+            // Se a base for maior que 7350, o redutor seria negativo, então a verificação cobre.
+            if (baseCalculation <= 7350.00) {
+                // Fórmula do Redutor: 978,61 – (0,133145 × Base de Cálculo)
+                // Usando toFixed(2) para alinhar arredondamentos intermediários
+                const coeficiente = parseFloat((0.133145 * baseCalculation).toFixed(2));
+                const redutor = 978.61 - coeficiente;
+                
+                // Aplica o redutor se for positivo
+                if (redutor > 0) {
+                    details.redutor = redutor;
+                    details.applied = true;
+                    irTax = irTax - redutor;
+                }
+            }
+
+            details.finalTax = irTax > 0 ? irTax : 0;
+            return { finalTax: details.finalTax, details };
         }
 
         function calculatePayroll() {
@@ -825,7 +852,13 @@
                 // Calcular descontos
                 const funsema = document.getElementById('funsemaAuto').checked ? calculateFunsema(funsemaBase) : 0;
                 const irCalculationBase = baseSalary + riskLife + gtsValue + gratifiedFunction + guardValue + totalOvertimeValue + baladaValue - funsema;
-                let irpf = document.getElementById('irpfAuto').checked ? calculateIRPF(irCalculationBase) : 0;
+                
+                let irpfResult = { finalTax: 0, details: null };
+                if (document.getElementById('irpfAuto').checked) {
+                    irpfResult = calculateIRPF(irCalculationBase, totalEarnings);
+                }
+                
+                let irpf = irpfResult.finalTax;
                 if (irpf < 0) irpf = 0;
 
                 const totalDeductions = funsema + irpf + healthPlan + transportDiscount + otherDeductions;
@@ -854,6 +887,7 @@
                     transportAllowance,
                     funsemaBase,
                     irCalculationBase,
+                    irDetails: irpfResult.details, // Passando detalhes do IR
                     totalEarnings,
                     totalBenefits,
                     funsema,
@@ -1010,6 +1044,12 @@
                             <div class="detail-label">Base IRPF</div>
                             <div class="detail-value">R$ ${data.irCalculationBase.toFixed(2)}</div>
                         </div>
+                        ${data.irDetails && data.irDetails.applied ? `
+                        <div class="detail-item" style="color: #16a34a; font-weight: 500;">
+                            <div class="detail-label">Redutor IR (Faixa 2)</div>
+                            <div class="detail-value">- R$ ${data.irDetails.redutor.toFixed(2)}</div>
+                        </div>
+                        ` : ''}
                         <div class="detail-item">
                             <div class="detail-label">Total Bruto</div>
                             <div class="detail-value">R$ ${(data.totalEarnings + data.totalBenefits).toFixed(2)}</div>

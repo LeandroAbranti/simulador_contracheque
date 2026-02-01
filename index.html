@@ -617,11 +617,11 @@
                 </div>
                 <div class="form-group">
                     <label for="gratifiedFunction">Função Gratificada (R$):</label>
-                    <input type="number" id="gratifiedFunction" value="1270.00" step="0.01" oninput="updateCalculations()">
+                    <input type="number" id="gratifiedFunction" value="0.00" step="0.01" oninput="updateCalculations()">
                 </div>
                 <div class="form-group">
                     <label>Valor Função Gratificada:</label>
-                    <div class="calculated-value" id="gratifiedFunctionValue">R$ 1270.00</div>
+                    <div class="calculated-value" id="gratifiedFunctionValue">R$ 0.00</div>
                 </div>
             </div>
         </div>
@@ -1042,7 +1042,7 @@
             document.getElementById('overtime100').value = '0';
             document.getElementById('overtime50').value = '0';
             document.getElementById('gts').value = '0';
-            document.getElementById('gratifiedFunction').value = '1270.00';
+            document.getElementById('gratifiedFunction').value = '0.00';
             document.querySelector('input[value="Nenhum"]').checked = true;
             document.getElementById('baladaQty').value = '0';
             document.getElementById('transportAllowance').value = '0.00';

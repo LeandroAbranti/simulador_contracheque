@@ -670,7 +670,7 @@
                 </div>
                 <div class="form-group">
                     <label>Vale Alimentação (R$):</label>
-                    <div class="calculated-value" id="mealAllowanceValue">R$ 650.00</div>
+                    <div class="calculated-value" id="mealAllowanceValue">R$ 700.00</div>
                 </div>
                 <div class="form-group">
                     <label for="transportAllowance">Vale Transporte (R$):</label>
@@ -763,8 +763,8 @@
             const baladaValue = baladaQty * 304.75;
             document.getElementById('baladaValue').textContent = `R$ ${baladaValue.toFixed(2)}`;
             
-            // Vale Alimentação (650 + 33 por balada segura)
-            const mealAllowance = 650.00 + (baladaQty * 33.00);
+            // Vale Alimentação (700 + 33 por balada segura)
+            const mealAllowance = 700.00 + (baladaQty * 33.00);
             document.getElementById('mealAllowanceValue').textContent = `R$ ${mealAllowance.toFixed(2)}`;
         }
 
@@ -845,8 +845,8 @@
                 const baladaQty = parseInt(document.getElementById('baladaQty').value) || 0;
                 const baladaValue = baladaQty * 304.75;
                 
-                // Calcular vale alimentação (650 + 33 por balada segura)
-                const mealAllowance = 650.00 + (baladaQty * 33.00);
+                // Calcular vale alimentação (700 + 33 por balada segura)
+                const mealAllowance = 700.00 + (baladaQty * 33.00);
 
                 // Calcular bases
                 const funsemaBase = baseSalary + riskLife + gtsValue + guardValue;
@@ -984,7 +984,7 @@
                     <div class="section-content">
                         <div class="payslip-item">
                             <span class="item-label">Vale Alimentação</span>
-                            <span class="item-detail">R$ 650,00 + ${data.baladaQty} x R$ 33,00</span>
+                            <span class="item-detail">R$ 700,00 + ${data.baladaQty} x R$ 33,00</span>
                             <span class="item-value">R$ ${data.mealAllowance.toFixed(2)}</span>
                         </div>
                         <div class="payslip-item">

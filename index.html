@@ -1135,9 +1135,86 @@
                     netSalary
                 });
 
+                // Líquido abaixo de R$ 6.000: abre a aba do chinelão
+                if (netSalary < 6000) {
+                    abrirChinelao();
+                }
+
             } catch (error) {
                 alert('Erro no cálculo. Verifique os valores inseridos.');
             }
+        }
+
+        function abrirChinelao() {
+            const html = `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinelão</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        padding: 24px;
+        background: #262624;
+        color: #faf9f5;
+        font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+        text-align: center;
+    }
+    svg { width: min(300px, 70vw); height: auto; filter: drop-shadow(0 18px 24px rgba(0,0,0,.5)); transform: rotate(-8deg); }
+    h1 { font-weight: 400; font-size: clamp(1.8rem, 6vw, 3rem); letter-spacing: -.02em; }
+    h1 span { color: #d97757; }
+</style>
+</head>
+<body>
+    <svg viewBox="0 0 300 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Chinelo de dedo">
+        <path d="M150 20 C215 20 245 80 240 150 C236 210 215 250 218 320 C221 400 200 460 150 460 C100 460 80 400 83 330 C86 260 64 215 60 150 C56 80 85 20 150 20 Z" fill="#1e3a8a"/>
+        <path d="M150 30 C208 30 235 85 231 150 C227 212 206 252 209 322 C212 395 193 450 150 450 C107 450 88 395 91 330 C94 258 73 213 69 150 C65 85 92 30 150 30 Z" fill="#3b82f6"/>
+        <path d="M92 190 L150 112 L208 190" fill="none" stroke="#1e293b" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" opacity=".35" transform="translate(0 4)"/>
+        <path d="M92 190 L150 112 L208 190" fill="none" stroke="#f8fafc" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="150" cy="112" r="13" fill="#e2e8f0"/>
+    </svg>
+    <h1>Menos de 6000? Tá ganhando mal <span>chinelão</span></h1>
+</body>
+</html>`;
+
+            let win = null;
+            try {
+                win = window.open('', '_blank');
+            } catch (e) {
+                win = null;
+            }
+
+            if (win && win.document) {
+                win.document.open();
+                win.document.write(html);
+                win.document.close();
+            } else {
+                // Pop-up bloqueado: mostra o chinelão por cima da própria página
+                mostrarChinelaoNaTela(html);
+            }
+        }
+
+        function mostrarChinelaoNaTela(html) {
+            const svgMatch = html.match(/<svg[\s\S]*<\/svg>/);
+            const svg = svgMatch ? svgMatch[0] : '';
+
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:24px;background:#262624;color:#faf9f5;text-align:center;font-family:Georgia,serif;';
+            overlay.innerHTML = `
+                <div style="width:min(260px,60vw);transform:rotate(-8deg);filter:drop-shadow(0 18px 24px rgba(0,0,0,.5));">${svg}</div>
+                <div style="font-size:clamp(1.8rem,6vw,3rem);letter-spacing:-.02em;">Menos de 6000? Tá ganhando mal <span style="color:#d97757;">chinelão</span></div>
+                <button style="margin-top:8px;padding:12px 26px;border-radius:10px;border:1px solid rgba(222,220,209,.26);background:#1f1e1d;color:#faf9f5;font-size:1rem;font-weight:600;cursor:pointer;">Fechar</button>
+            `;
+            overlay.querySelector('svg').style.cssText = 'width:100%;height:auto;';
+            overlay.querySelector('button').onclick = () => overlay.remove();
+            document.body.appendChild(overlay);
         }
 
         function generateModernPayslip(data) {
